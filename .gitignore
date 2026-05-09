@@ -218,3 +218,6 @@ yarn-error.log*
 # Flask Backend
 uploads/
 *.sqlite3
+
+# External Tools
+potrace-*/
