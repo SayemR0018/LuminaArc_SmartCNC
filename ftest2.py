@@ -534,7 +534,7 @@ def open_in_lasergrbl(gcode_path: Path) -> None:
         stdout=subprocess.DEVNULL,
         stderr=subprocess.DEVNULL
     )
-    time.sleep(0.3)
+    time.sleep(0.5)
     
     # Try common paths for LaserGRBL
     common_paths = [
@@ -552,6 +552,26 @@ def open_in_lasergrbl(gcode_path: Path) -> None:
     if lasergrbl_exe:
         # Launch LaserGRBL explicitly with the gcode file
         subprocess.Popen([lasergrbl_exe, str(gcode_path)])
+        
+        # Automate clicking the "Play" (BtnRunProgram) button via a separate process
+        # to prevent pywinauto from messing up the Tkinter GUI's DPI scaling.
+        pycode = """
+import time
+try:
+    from pywinauto import Application
+    app = Application(backend="win32").connect(path="LaserGRBL.exe", timeout=15)
+    main_window = app.top_window()
+    btn = main_window.child_window(auto_id="BtnRunProgram")
+    btn.wait("visible enabled", timeout=15)
+    main_window.set_focus()
+    time.sleep(0.5)
+    btn.click_input()
+    print("Successfully auto-started the job in LaserGRBL.")
+except Exception as e:
+    print(f"Auto-play failed: {e}")
+"""
+        subprocess.Popen([sys.executable, "-c", pycode])
+            
     else:
         # Fallback to os.startfile if not found
         os.startfile(str(gcode_path))

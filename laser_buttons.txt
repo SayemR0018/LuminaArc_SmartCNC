@@ -1,0 +1,16 @@
+Name: 'Line up', Text: 'Line up', ID: None
+Name: 'Page up', Text: 'Page up', ID: None
+Name: 'Page down', Text: 'Page down', ID: None
+Name: 'Line down', Text: 'Line down', ID: None
+Name: 'Up', Text: 'Up', ID: None
+Name: 'Down', Text: 'Down', ID: None
+Name: 'Open', Text: 'Open', ID: None
+Name: 'Open', Text: 'Open', ID: None
+Name: 'Page up', Text: 'Page up', ID: None
+Name: 'Page down', Text: 'Page down', ID: None
+Name: 'Page up', Text: 'Page up', ID: None
+Name: 'Page down', Text: 'Page down', ID: None
+Name: '', Text: '', ID: None
+Name: 'Minimize', Text: 'Minimize', ID: None
+Name: 'Maximize', Text: 'Maximize', ID: None
+Name: 'Close', Text: 'Close', ID: None

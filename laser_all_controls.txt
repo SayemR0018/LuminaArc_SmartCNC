@@ -1,0 +1,449 @@
+Control Identifiers:
+
+Dialog - 'LaserGRBL v7.14.1'    (L312, T0, R2658, B1840)
+['LaserGRBL v7.14.1', 'Dialog', 'LaserGRBL v7.14.1Dialog']
+child_window(title="LaserGRBL v7.14.1", auto_id="MainForm", control_type="Window")
+   | 
+   | Pane - ''    (L328, T110, R2642, B1768)
+   | ['Pane', 'COMPane', 'Pane0', 'Pane1', 'COMPane0', 'COMPane1']
+   | child_window(auto_id="splitContainer1", control_type="Pane")
+   |    | 
+   |    | Pane - ''    (L328, T110, R848, B1768)
+   |    | ['Pane2', 'COMPane2']
+   |    | child_window(auto_id="919912", control_type="Pane")
+   |    |    | 
+   |    |    | Pane - ''    (L328, T110, R848, B1512)
+   |    |    | ['Pane3', 'COMPane3']
+   |    |    | child_window(auto_id="ConnectionForm", control_type="Pane")
+   |    |    | 
+   |    |    | Pane - ''    (L328, T1512, R848, B1768)
+   |    |    | ['F1000Pane', 'Pane19', 'F1000Pane0', 'F1000Pane1']
+   |    |    | child_window(auto_id="JogForm", control_type="Pane")
+   |    | 
+   |    | Pane - ''    (L856, T110, R2642, B1768)
+   |    | ['BaudPane', '10Pane', 'Pane32', 'BaudPane0', 'BaudPane1', '10Pane0', '10Pane1']
+   |    | child_window(auto_id="1051306", control_type="Pane")
+   |    |    | 
+   |    |    | Pane - ''    (L856, T110, R2642, B1768)
+   |    |    | ['BaudPane2', 'Pane33']
+   |    |    | child_window(auto_id="PreviewForm", control_type="Pane")
+   | 
+   | StatusBar - ''    (L328, T1768, R2642, B1824)
+   | ['Lines:StatusBar', 'StatusBar']
+   | child_window(auto_id="StatusBar", control_type="StatusBar")
+   |    | 
+   |    | Progress - ''    (L508, T1774, R648, B1818)
+   |    | ['Progress4', 'BufferProgress']
+   |    | child_window(auto_id="2818350", control_type="ProgressBar")
+   |    | 
+   |    | Static - 'Lines:'    (L330, T1774, R404, B1820)
+   |    | ['Static9', 'Lines:Static', 'Lines:']
+   |    | child_window(title="Lines:", control_type="Text")
+   |    | 
+   |    | Static - '0'    (L404, T1774, R430, B1820)
+   |    | ['Static10', '0', '0Static']
+   |    | child_window(title="0", control_type="Text")
+   |    | 
+   |    | Static - 'Buffer'    (L430, T1774, R508, B1820)
+   |    | ['Static11', 'Buffer', 'BufferStatic']
+   |    | child_window(title="Buffer", control_type="Text")
+   |    | 
+   |    | Button - ''    (L648, T1772, R694, B1824)
+   |    | ['Button13', 'BufferButton']
+   |    | 
+   |    | Static - 'Estimated Time:'    (L698, T1774, R882, B1820)
+   |    | ['Static12', 'Estimated Time:Static', 'Estimated Time:']
+   |    | child_window(title="Estimated Time:", control_type="Text")
+   |    | 
+   |    | Static - 'now'    (L882, T1774, R942, B1820)
+   |    | ['Static13', 'nowStatic', 'now']
+   |    | child_window(title="now", control_type="Text")
+   |    | 
+   |    | Hyperlink - 'CONNECTION ISSUE AFTER UPDATE?'    (L942, T1774, R2294, B1820)
+   |    | ['Hyperlink', 'CONNECTION ISSUE AFTER UPDATE?Hyperlink', 'CONNECTION ISSUE AFTER UPDATE?']
+   |    | child_window(title="CONNECTION ISSUE AFTER UPDATE?", control_type="Hyperlink")
+   |    | 
+   |    | Static - '0.0h'    (L2294, T1774, R2352, B1820)
+   |    | ['Static14', '0.0h', '0.0hStatic', '0.0hStatic0', '0.0hStatic1']
+   |    | child_window(title="0.0h", control_type="Text")
+   |    | 
+   |    | Static - ''    (L2352, T1774, R2362, B1820)
+   |    | ['Static15', '0.0hStatic2']
+   |    | 
+   |    | Static - 'Status:'    (L2362, T1774, R2446, B1820)
+   |    | ['Static16', 'Status:Static', 'Status:']
+   |    | child_window(title="Status:", control_type="Text")
+   |    | 
+   |    | Static - 'Disconnected'    (L2446, T1774, R2604, B1820)
+   |    | ['Static17', 'Disconnected', 'DisconnectedStatic']
+   |    | child_window(title="Disconnected", control_type="Text")
+   | 
+   | Menu - ''    (L328, T62, R2642, B110)
+   | ['Menu', 'Menu0', 'Menu1']
+   | child_window(auto_id="MMn", control_type="MenuBar")
+   |    | 
+   |    | MenuItem - 'Grbl'    (L340, T66, R454, B106)
+   |    | ['GrblMenuItem', 'MenuItem', 'Grbl', 'MenuItem0', 'MenuItem1']
+   |    | child_window(title="Grbl", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Connect'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem2', 'Connect', 'ConnectMenuItem']
+   |    |    | child_window(title="Connect", control_type="MenuItem")
+   |    |    | 
+   |    |    | Separator - ''    (L0, T0, R0, B0)
+   |    |    | ['Separator', 'Separator0', 'Separator1']
+   |    |    | 
+   |    |    | MenuItem - 'Reset'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem3', 'ResetMenuItem', 'Reset']
+   |    |    | child_window(title="Reset", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Unlock'    (L0, T0, R0, B0)
+   |    |    | ['Unlock', 'MenuItem4', 'UnlockMenuItem']
+   |    |    | child_window(title="Unlock", control_type="MenuItem")
+   |    |    | 
+   |    |    | Separator - ''    (L0, T0, R0, B0)
+   |    |    | ['Separator', 'Separator0', 'Separator1']
+   |    |    | 
+   |    |    | MenuItem - 'Grbl Configuration'    (L0, T0, R0, B0)
+   |    |    | ['Grbl Configuration', 'MenuItem5', 'Grbl ConfigurationMenuItem']
+   |    |    | child_window(title="Grbl Configuration", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Settings'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem6', 'Settings', 'SettingsMenuItem']
+   |    |    | child_window(title="Settings", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Material DB'    (L0, T0, R0, B0)
+   |    |    | ['Material DB', 'MenuItem7', 'Material DBMenuItem']
+   |    |    | child_window(title="Material DB", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Laser Lifespan'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem8', 'Laser Lifespan', 'Laser LifespanMenuItem']
+   |    |    | child_window(title="Laser Lifespan", control_type="MenuItem")
+   |    |    | 
+   |    |    | Separator - ''    (L0, T0, R0, B0)
+   |    |    | ['Separator', 'Separator0', 'Separator1']
+   |    |    | 
+   |    |    | MenuItem - 'Hotkeys'    (L0, T0, R0, B0)
+   |    |    | ['HotkeysMenuItem', 'Hotkeys', 'MenuItem9']
+   |    |    | child_window(title="Hotkeys", control_type="MenuItem")
+   |    |    | 
+   |    |    | Separator - ''    (L0, T0, R0, B0)
+   |    |    | ['Separator', 'Separator0', 'Separator1']
+   |    |    | 
+   |    |    | MenuItem - 'Exit'    (L0, T0, R0, B0)
+   |    |    | ['ExitMenuItem', 'MenuItem10', 'Exit']
+   |    |    | child_window(title="Exit", control_type="MenuItem")
+   |    | 
+   |    | MenuItem - 'File'    (L454, T66, R560, B106)
+   |    | ['File', 'MenuItem11', 'FileMenuItem']
+   |    | child_window(title="File", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Open File'    (L0, T0, R0, B0)
+   |    |    | ['Open File', 'MenuItem12', 'Open FileMenuItem']
+   |    |    | child_window(title="Open File", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Append File'    (L0, T0, R0, B0)
+   |    |    | ['Append File', 'MenuItem13', 'Append FileMenuItem']
+   |    |    | child_window(title="Append File", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Reload Last File'    (L0, T0, R0, B0)
+   |    |    | ['Reload Last FileMenuItem', 'MenuItem14', 'Reload Last File']
+   |    |    | child_window(title="Reload Last File", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Quick Save'    (L0, T0, R0, B0)
+   |    |    | ['Quick Save', 'MenuItem15', 'Quick SaveMenuItem']
+   |    |    | child_window(title="Quick Save", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Save (Advanced Options)'    (L0, T0, R0, B0)
+   |    |    | ['Save (Advanced Options)MenuItem', 'MenuItem16', 'Save (Advanced Options)']
+   |    |    | child_window(title="Save (Advanced Options)", control_type="MenuItem")
+   |    |    | 
+   |    |    | Separator - ''    (L0, T0, R0, B0)
+   |    |    | ['Separator', 'Separator0', 'Separator1']
+   |    |    | 
+   |    |    | MenuItem - 'Save Project'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem17', 'Save Project', 'Save ProjectMenuItem']
+   |    |    | child_window(title="Save Project", control_type="MenuItem")
+   |    |    | 
+   |    |    | Separator - ''    (L0, T0, R0, B0)
+   |    |    | ['Separator', 'Separator0', 'Separator1']
+   |    |    | 
+   |    |    | MenuItem - 'Send To Machine'    (L0, T0, R0, B0)
+   |    |    | ['Send To MachineMenuItem', 'MenuItem18', 'Send To Machine']
+   |    |    | child_window(title="Send To Machine", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Send From Position'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem19', 'Send From Position', 'Send From PositionMenuItem']
+   |    |    | child_window(title="Send From Position", control_type="MenuItem")
+   |    |    | 
+   |    |    | Separator - ''    (L0, T0, R0, B0)
+   |    |    | ['Separator', 'Separator0', 'Separator1']
+   |    |    | 
+   |    |    | MenuItem - 'Syncro Start/Hold/Resume'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem20', 'Syncro Start/Hold/Resume', 'Syncro Start/Hold/ResumeMenuItem']
+   |    |    | child_window(title="Syncro Start/Hold/Resume", control_type="MenuItem")
+   |    | 
+   |    | MenuItem - 'Generate'    (L560, T66, R724, B106)
+   |    | ['Generate', 'MenuItem21', 'GenerateMenuItem']
+   |    | child_window(title="Generate", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Power vs Speed test'    (L0, T0, R0, B0)
+   |    |    | ['Power vs Speed test', 'MenuItem22', 'Power vs Speed testMenuItem']
+   |    |    | child_window(title="Power vs Speed test", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Cutting Test'    (L0, T0, R0, B0)
+   |    |    | ['Cutting Test', 'Cutting TestMenuItem', 'MenuItem23']
+   |    |    | child_window(title="Cutting Test", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Accuracy Test'    (L0, T0, R0, B0)
+   |    |    | ['Accuracy TestMenuItem', 'MenuItem24', 'Accuracy Test']
+   |    |    | child_window(title="Accuracy Test", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Shake Test'    (L0, T0, R0, B0)
+   |    |    | ['Shake Test', 'MenuItem25', 'Shake TestMenuItem']
+   |    |    | child_window(title="Shake Test", control_type="MenuItem")
+   |    | 
+   |    | MenuItem - 'Colors'    (L724, T66, R862, B106)
+   |    | ['ColorsMenuItem', 'MenuItem26', 'Colors']
+   |    | child_window(title="Colors", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'CAD Style'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem27', 'CAD Style', 'CAD StyleMenuItem']
+   |    |    | child_window(title="CAD Style", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'CAD Dark'    (L0, T0, R0, B0)
+   |    |    | ['CAD DarkMenuItem', 'MenuItem28', 'CAD Dark']
+   |    |    | child_window(title="CAD Dark", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Blue Laser'    (L0, T0, R0, B0)
+   |    |    | ['Blue LaserMenuItem', 'MenuItem29', 'Blue Laser']
+   |    |    | child_window(title="Blue Laser", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Red Laser'    (L0, T0, R0, B0)
+   |    |    | ['Red Laser', 'MenuItem30', 'Red LaserMenuItem']
+   |    |    | child_window(title="Red Laser", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Dark'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem31', 'DarkMenuItem', 'Dark']
+   |    |    | child_window(title="Dark", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Hacker'    (L0, T0, R0, B0)
+   |    |    | ['HackerMenuItem', 'MenuItem32', 'Hacker']
+   |    |    | child_window(title="Hacker", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Nighty'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem33', 'Nighty', 'NightyMenuItem']
+   |    |    | child_window(title="Nighty", control_type="MenuItem")
+   |    | 
+   |    | MenuItem - 'Preview'    (L862, T66, R1014, B106)
+   |    | ['PreviewMenuItem', 'MenuItem34', 'Preview']
+   |    | child_window(title="Preview", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Zoom Auto (100%)'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem35', 'Zoom Auto (100%)', 'Zoom Auto (100%)MenuItem']
+   |    |    | child_window(title="Zoom Auto (100%)", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Zoom In (+10%)'    (L0, T0, R0, B0)
+   |    |    | ['Zoom In (+10%)', 'MenuItem36', 'Zoom In (+10%)MenuItem']
+   |    |    | child_window(title="Zoom In (+10%)", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Zoom Out (-10%)'    (L0, T0, R0, B0)
+   |    |    | ['Zoom Out (-10%)MenuItem', 'MenuItem37', 'Zoom Out (-10%)']
+   |    |    | child_window(title="Zoom Out (-10%)", control_type="MenuItem")
+   |    |    | 
+   |    |    | Separator - ''    (L0, T0, R0, B0)
+   |    |    | ['Separator', 'Separator0', 'Separator1']
+   |    |    | 
+   |    |    | MenuItem - 'Show Laser Off movements'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem38', 'Show Laser Off movements', 'Show Laser Off movementsMenuItem']
+   |    |    | child_window(title="Show Laser Off movements", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Show executed commands'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem39', 'Show executed commands', 'Show executed commandsMenuItem']
+   |    |    | child_window(title="Show executed commands", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Show bounding box'    (L0, T0, R0, B0)
+   |    |    | ['Show bounding box', 'MenuItem40', 'Show bounding boxMenuItem']
+   |    |    | child_window(title="Show bounding box", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Show cross cursor'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem41', 'Show cross cursorMenuItem', 'Show cross cursor']
+   |    |    | child_window(title="Show cross cursor", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Auto size mode'    (L0, T0, R0, B0)
+   |    |    | ['Auto size modeMenuItem', 'MenuItem42', 'Auto size mode']
+   |    |    | child_window(title="Auto size mode", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Line size'    (L0, T0, R0, B0)
+   |    |    | ['Line size', 'MenuItem45', 'Line sizeMenuItem']
+   |    |    | child_window(title="Line size", control_type="MenuItem")
+   |    |    | 
+   |    |    | Separator - ''    (L0, T0, R0, B0)
+   |    |    | ['Separator', 'Separator0', 'Separator1']
+   |    |    | 
+   |    |    | MenuItem - 'Show diagnostic data'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem51', 'Show diagnostic data', 'Show diagnostic dataMenuItem']
+   |    |    | child_window(title="Show diagnostic data", control_type="MenuItem")
+   |    | 
+   |    | MenuItem - 'Language'    (L1014, T66, R1188, B106)
+   |    | ['MenuItem52', 'LanguageMenuItem', 'Language']
+   |    | child_window(title="Language", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'English'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem53', 'EnglishMenuItem', 'English']
+   |    |    | child_window(title="English", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Italian'    (L0, T0, R0, B0)
+   |    |    | ['Italian', 'MenuItem54', 'ItalianMenuItem']
+   |    |    | child_window(title="Italian", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Spanish'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem55', 'SpanishMenuItem', 'Spanish']
+   |    |    | child_window(title="Spanish", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'French'    (L0, T0, R0, B0)
+   |    |    | ['FrenchMenuItem', 'MenuItem56', 'French']
+   |    |    | child_window(title="French", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'German'    (L0, T0, R0, B0)
+   |    |    | ['GermanMenuItem', 'MenuItem57', 'German']
+   |    |    | child_window(title="German", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Danish'    (L0, T0, R0, B0)
+   |    |    | ['Danish', 'MenuItem58', 'DanishMenuItem']
+   |    |    | child_window(title="Danish", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Portuguese'    (L0, T0, R0, B0)
+   |    |    | ['PortugueseMenuItem', 'MenuItem59', 'Portuguese']
+   |    |    | child_window(title="Portuguese", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Russian'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem60', 'Russian', 'RussianMenuItem']
+   |    |    | child_window(title="Russian", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Chinese (simplified)'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem61', 'Chinese (simplified)', 'Chinese (simplified)MenuItem']
+   |    |    | child_window(title="Chinese (simplified)", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Chinese (traditional)'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem62', 'Chinese (traditional)MenuItem', 'Chinese (traditional)']
+   |    |    | child_window(title="Chinese (traditional)", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Slovak'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem63', 'Slovak', 'SlovakMenuItem']
+   |    |    | child_window(title="Slovak", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Hungarian'    (L0, T0, R0, B0)
+   |    |    | ['Hungarian', 'MenuItem64', 'HungarianMenuItem']
+   |    |    | child_window(title="Hungarian", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Czech'    (L0, T0, R0, B0)
+   |    |    | ['Czech', 'MenuItem65', 'CzechMenuItem']
+   |    |    | child_window(title="Czech", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Polish'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem66', 'PolishMenuItem', 'Polish']
+   |    |    | child_window(title="Polish", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Greek'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem67', 'GreekMenuItem', 'Greek']
+   |    |    | child_window(title="Greek", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Turkish'    (L0, T0, R0, B0)
+   |    |    | ['TurkishMenuItem', 'Turkish', 'MenuItem68']
+   |    |    | child_window(title="Turkish", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Romanian'    (L0, T0, R0, B0)
+   |    |    | ['RomanianMenuItem', 'MenuItem69', 'Romanian']
+   |    |    | child_window(title="Romanian", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Dutch'    (L0, T0, R0, B0)
+   |    |    | ['Dutch', 'DutchMenuItem', 'MenuItem70']
+   |    |    | child_window(title="Dutch", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Ukrainian'    (L0, T0, R0, B0)
+   |    |    | ['Ukrainian', 'MenuItem71', 'UkrainianMenuItem']
+   |    |    | child_window(title="Ukrainian", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Japanese'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem72', 'JapaneseMenuItem', 'Japanese']
+   |    |    | child_window(title="Japanese", control_type="MenuItem")
+   |    | 
+   |    | MenuItem - 'Tools'    (L1188, T66, R1314, B106)
+   |    | ['ToolsMenuItem', 'MenuItem73', 'Tools']
+   |    | child_window(title="Tools", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Install CH340 Driver'    (L0, T0, R0, B0)
+   |    |    | ['Install CH340 DriverMenuItem', 'MenuItem74', 'Install CH340 Driver']
+   |    |    | child_window(title="Install CH340 Driver", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Flash Grbl Firmware'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem75', 'Flash Grbl FirmwareMenuItem', 'Flash Grbl Firmware']
+   |    |    | child_window(title="Flash Grbl Firmware", control_type="MenuItem")
+   |    | 
+   |    | MenuItem - ''    (L1314, T66, R1370, B106)
+   |    | ['MenuItem76']
+   |    |    | 
+   |    |    | MenuItem - 'Auto update'    (L0, T0, R0, B0)
+   |    |    | ['Auto updateMenuItem', 'MenuItem77', 'Auto update']
+   |    |    | child_window(title="Auto update", control_type="MenuItem")
+   |    |    | 
+   |    |    | Separator - ''    (L0, T0, R0, B0)
+   |    |    | ['Separator', 'Separator0', 'Separator1']
+   |    |    | 
+   |    |    | MenuItem - 'Open session log'    (L0, T0, R0, B0)
+   |    |    | ['Open session logMenuItem', 'MenuItem82', 'Open session log']
+   |    |    | child_window(title="Open session log", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'Activate extended log'    (L0, T0, R0, B0)
+   |    |    | ['MenuItem83', 'Activate extended logMenuItem', 'Activate extended log']
+   |    |    | child_window(title="Activate extended log", control_type="MenuItem")
+   |    |    | 
+   |    |    | Separator - ''    (L0, T0, R0, B0)
+   |    |    | ['Separator', 'Separator0', 'Separator1']
+   |    |    | 
+   |    |    | MenuItem - 'Help on line'    (L0, T0, R0, B0)
+   |    |    | ['Help on lineMenuItem', 'MenuItem84', 'Help on line']
+   |    |    | child_window(title="Help on line", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'LaserGrbl FAQ'    (L0, T0, R0, B0)
+   |    |    | ['LaserGrbl FAQ', 'LaserGrbl FAQMenuItem', 'MenuItem85']
+   |    |    | child_window(title="LaserGrbl FAQ", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'LaserGrbl Community'    (L0, T0, R0, B0)
+   |    |    | ['LaserGrbl Community', 'MenuItem86', 'LaserGrbl CommunityMenuItem']
+   |    |    | child_window(title="LaserGrbl Community", control_type="MenuItem")
+   |    |    | 
+   |    |    | Separator - ''    (L0, T0, R0, B0)
+   |    |    | ['Separator', 'Separator0', 'Separator1']
+   |    |    | 
+   |    |    | MenuItem - 'Donate!'    (L0, T0, R0, B0)
+   |    |    | ['Donate!', 'MenuItem87', 'Donate!MenuItem']
+   |    |    | child_window(title="Donate!", control_type="MenuItem")
+   |    |    | 
+   |    |    | MenuItem - 'License'    (L0, T0, R0, B0)
+   |    |    | ['LicenseMenuItem', 'MenuItem88', 'License']
+   |    |    | child_window(title="License", control_type="MenuItem")
+   | 
+   | TitleBar - ''    (L360, T6, R2642, B62)
+   | ['TitleBar']
+   |    | 
+   |    | Menu - 'System'    (L328, T16, R372, B60)
+   |    | ['SystemMenu', 'System', 'Menu2', 'System0', 'System1']
+   |    | child_window(title="System", auto_id="MenuBar", control_type="MenuBar")
+   |    |    | 
+   |    |    | MenuItem - 'System'    (L328, T16, R372, B60)
+   |    |    | ['SystemMenuItem', 'MenuItem89', 'System2']
+   |    |    | child_window(title="System", control_type="MenuItem")
+   |    | 
+   |    | Button - 'Minimize'    (L2364, T2, R2458, B62)
+   |    | ['Button14', 'Minimize', 'MinimizeButton']
+   |    | child_window(title="Minimize", control_type="Button")
+   |    | 
+   |    | Button - 'Maximize'    (L2458, T2, R2550, B62)
+   |    | ['Button15', 'Maximize', 'MaximizeButton']
+   |    | child_window(title="Maximize", control_type="Button")
+   |    | 
+   |    | Button - 'Close'    (L2550, T2, R2644, B62)
+   |    | ['Close', 'Button16', 'CloseButton']
+   |    | child_window(title="Close", control_type="Button")
