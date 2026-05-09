@@ -535,7 +535,26 @@ def open_in_lasergrbl(gcode_path: Path) -> None:
         stderr=subprocess.DEVNULL
     )
     time.sleep(0.3)
-    os.startfile(str(gcode_path))
+    
+    # Try common paths for LaserGRBL
+    common_paths = [
+        r"C:\Program Files (x86)\LaserGRBL\LaserGRBL.exe",
+        r"C:\Program Files\LaserGRBL\LaserGRBL.exe",
+        os.path.expandvars(r"%LOCALAPPDATA%\Programs\LaserGRBL\LaserGRBL.exe")
+    ]
+    
+    lasergrbl_exe = None
+    for p in common_paths:
+        if os.path.exists(p):
+            lasergrbl_exe = p
+            break
+            
+    if lasergrbl_exe:
+        # Launch LaserGRBL explicitly with the gcode file
+        subprocess.Popen([lasergrbl_exe, str(gcode_path)])
+    else:
+        # Fallback to os.startfile if not found
+        os.startfile(str(gcode_path))
 
 
 def process_one(input_path: Path, mode: int) -> dict:
