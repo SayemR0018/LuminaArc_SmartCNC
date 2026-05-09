@@ -81,8 +81,7 @@ smart-cnc-automated-pen-plotter
 ├── potrace-1.16.win64/   # Potrace executable for raster-to-vector
 ├── README.md             # Project documentation
 ├── requirements.txt      # Python dependencies
-└── images/
-    └── cnc_machine.jpg   # CNC machine photo
+
 ```
 
 ---
@@ -136,27 +135,9 @@ The system will automatically process the image, generate CNC G-code, launch Las
 
 ---
 
-## Example Output
-
-The following image shows an example drawing produced by the **Smart CNC Automated Pen Plotter** using the shading mode.
-
-<p align="center">
-  <img src="images/output.jpg.jpeg" width="600">
-</p>
-
-
 ## CNC Machine Control
 The generated G-code is executed using a **GRBL-based CNC control system**.
 
 The machine receives **G-code commands** from a G-code sender such as **LaserGRBL** or **Universal G-code Sender**. The firmware used for machine control is **GRBL**, configured to handle servo motors (using M3/M5 spindle commands) for pen up/down movements.
 
 ---
-
-## Future Improvements
-Possible future enhancements for this project include:
-
-- Path optimization for faster plotting
-- Multi-pen color drawing support
-- Real-time preview simulation
-- Mobile or cloud-based control
-- Improved shading algorithms
