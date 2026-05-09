@@ -174,12 +174,3 @@ Possible future enhancements for this project include:
 - Improved shading algorithms
 ---
 
-## Contributors
-
-- **Md. Redwan Hossain Khan** — Project Lead, Software Development, Mechanical Design and System Integration  
-- **Md. Tahasinur Rahman** — Hardware Assembly and Mechanical Setup ([GitHub](https://github.com/Tahasinur))
----
-
-## License
-This project is licensed under the **MIT License**.
----
