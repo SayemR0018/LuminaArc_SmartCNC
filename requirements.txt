@@ -3,3 +3,6 @@ requests
 svgpathtools
 numpy
 opencv-python
+pywinauto
+flask
+flask-cors

@@ -6,12 +6,13 @@ This project presents a fully automated system that converts a user-selected ima
 ## Project Overview
 The goal of this project is to simplify the process of converting images into CNC pen plotter drawings.
 
-Traditional workflows require multiple tools and manual processing steps. This system automates the entire pipeline from image selection to final G-code generation using a graphical interface and Python-based backend processing. It now also features a direct integration with **LaserGRBL** to instantly load and auto-play your plotter!
+Traditional workflows require multiple tools and manual processing steps. This system automates the entire pipeline from image selection to final G-code generation using a modern **React Web Application** and a Python-based backend processing server. It now also features a direct integration with **LaserGRBL** to instantly load and auto-play your plotter!
 
 ---
 
 ## Features 
 - Fully automated image-to-Gcode pipeline
+- Beautiful, high-performance UI using **React** and Glassmorphism styling.
 - Dual drawing modes
    1. **Outline Mode**: Traces the exact contour edges of the image.
    2. **Shading / Hatch Mode**: Fills in dark areas with precise hatching.
@@ -62,8 +63,8 @@ CNC Pen Plot Drawing
 ## Software Stack
 This project uses the following technologies:
 
-- **Python**
-- **Tkinter** – GUI development
+- **React & Vite** – Frontend Web UI development
+- **Python & Flask** – Backend server and task processing
 - **Pillow** – Image processing
 - **Requests** – API communication
 - **svgpathtools** – SVG path processing
@@ -76,28 +77,32 @@ This project uses the following technologies:
 ## Project Structure
 ```text
 smart-cnc-automated-pen-plotter
-├── GUI.py                # Graphical user interface
-├── ftest2.py             # Image processing + G-code generation
+├── frontend/             # React User Interface (Vite)
+├── server.py             # Flask Backend API Server
+├── ftest2.py             # Image processing + G-code generation logic
 ├── potrace-1.16.win64/   # Potrace executable for raster-to-vector
 ├── README.md             # Project documentation
-├── requirements.txt      # Python dependencies
-
+└── requirements.txt      # Python dependencies
 ```
 
 ---
 
 ## Installation
+
+### 1. Python Backend Dependencies
 Install the required Python libraries using pip:
 
 ```bash
-pip install pillow
-pip install requests
-pip install svgpathtools
-pip install numpy
-pip install opencv-python
-pip install pywinauto
+pip install -r requirements.txt
 ```
-*(Or install using: `pip install -r requirements.txt`)*
+
+### 2. React Frontend Dependencies
+Navigate into the frontend folder and install the Node packages:
+
+```bash
+cd frontend
+npm install
+```
 
 ---
 
@@ -119,19 +124,30 @@ The current implementation uses **Potrace** (included in the `potrace-1.16.win64
 ---
 
 ## Running the Project
-Make sure all files are in the same directory, then run the application:
+Since this is a web application, you need to run the backend and frontend simultaneously in two separate terminal windows.
 
+### 1. Start the Backend Server
+In the main project directory, start the Flask server:
 ```bash
-python GUI.py
+python server.py
 ```
+*(Runs on `http://localhost:5000`)*
 
-### Steps
+### 2. Start the Frontend UI
+Open a new terminal, navigate to the frontend folder, and start the React dev server:
+```bash
+cd frontend
+npm run dev
+```
+*(Runs on `http://localhost:5173`)*
 
-1. Browse and select an image file.
-2. Choose your preferred processing mode (Outline or Shading).
-3. Click **RUN PROCESS**.
+### Steps to Plot
+1. Open the provided `localhost` link in your web browser.
+2. Drag and drop (or browse and select) an image file.
+3. Choose your preferred processing mode (Outline or Shading).
+4. Click **Generate & Auto-Play**.
 
-The system will automatically process the image, generate CNC G-code, launch LaserGRBL, load the file, and automatically hit play!
+The system will automatically process the image, generate CNC G-code, launch LaserGRBL, load the file, and automatically hit play! You can monitor the Python logs directly within the UI terminal window.
 
 ---
 
