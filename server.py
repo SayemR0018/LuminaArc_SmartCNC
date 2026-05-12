@@ -5,12 +5,17 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from pathlib import Path
 import ftest2
+from flask import send_from_directory
 
 app = Flask(__name__)
 CORS(app) # Allow cross-origin requests from React dev server
 
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+@app.route('/uploads/<filename>')
+def serve_uploads(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
 
 @app.route('/api/process', methods=['POST'])
 def process_image():
@@ -40,10 +45,16 @@ def process_image():
             logs = buf.getvalue()
             
             if exit_code == 0:
+                base_name = os.path.splitext(file.filename)[0]
+                svg_filename = f"{base_name}_clean_m{mode_val}.svg"
+                gcode_filename = f"{base_name}_m{mode_val}.gcode"
+                
                 return jsonify({
                     "success": True, 
                     "logs": logs,
-                    "message": "Processing complete! LaserGRBL should be launching."
+                    "message": "Processing complete! LaserGRBL should be launching.",
+                    "svg_url": f"http://localhost:5000/uploads/{svg_filename}",
+                    "gcode_url": f"http://localhost:5000/uploads/{gcode_filename}"
                 })
             else:
                 return jsonify({

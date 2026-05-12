@@ -7,6 +7,8 @@ function App() {
   const [mode, setMode] = useState(1);
   const [isProcessing, setIsProcessing] = useState(false);
   const [logs, setLogs] = useState('');
+  const [svgContent, setSvgContent] = useState(null);
+  const [gcodeContent, setGcodeContent] = useState(null);
   const fileInputRef = useRef(null);
   const terminalRef = useRef(null);
 
@@ -16,6 +18,8 @@ function App() {
       setFile(selectedFile);
       setPreviewUrl(URL.createObjectURL(selectedFile));
       setLogs(''); // Clear logs on new file
+      setSvgContent(null);
+      setGcodeContent(null);
     }
   };
 
@@ -26,6 +30,8 @@ function App() {
       setFile(droppedFile);
       setPreviewUrl(URL.createObjectURL(droppedFile));
       setLogs('');
+      setSvgContent(null);
+      setGcodeContent(null);
     }
   };
 
@@ -63,6 +69,30 @@ function App() {
 
       if (response.ok && data.success) {
         setLogs(prev => prev + '\n✅ ' + data.message);
+        if (data.svg_url) {
+          try {
+            const svgResponse = await fetch(data.svg_url);
+            let svgText = await svgResponse.text();
+            // Remove 'svg:' namespace prefixes if they exist (caused by XML ElementTree)
+            svgText = svgText.replace(/<svg:([a-zA-Z0-9-]+)/g, '<$1');
+            svgText = svgText.replace(/<\/svg:([a-zA-Z0-9-]+)/g, '</$1');
+            setSvgContent(svgText);
+          } catch (e) {
+            console.error("Could not load SVG preview");
+          }
+        }
+        
+        if (data.gcode_url) {
+          try {
+            const gcodeResponse = await fetch(data.gcode_url);
+            const gcodeText = await gcodeResponse.text();
+            // Get first 8 lines of G-code
+            const previewLines = gcodeText.split('\n').slice(0, 8).join('\n');
+            setGcodeContent(previewLines);
+          } catch (e) {
+            console.error("Could not load GCode preview");
+          }
+        }
       } else {
         setLogs(prev => prev + '\n❌ Error: ' + (data.error || 'Unknown error occurred.'));
       }
@@ -104,9 +134,15 @@ function App() {
             />
             
             {previewUrl ? (
-              <div className="preview-container">
-                <img src={previewUrl} alt="Preview" className="preview-image" />
-                <button className="browse-btn" onClick={(e) => { e.stopPropagation(); triggerFileInput(); }}>
+              <div className="preview-container" style={{position: 'relative', width: '100%', height: '100%', minHeight: '200px'}}>
+                {isProcessing && (
+                  <div className="processing-overlay">
+                    <div className="laser-scanner"></div>
+                    <span className="spinner"></span> Generating Toolpath...
+                  </div>
+                )}
+                <img src={previewUrl} alt="Preview" className="preview-image" style={{ width: '100%', height: '100%', objectFit: 'contain', margin: 0, maxHeight: '250px' }} />
+                <button className="browse-btn" onClick={(e) => { e.stopPropagation(); triggerFileInput(); }} style={{ marginTop: '1rem', position: 'relative', zIndex: 20 }}>
                   Change Image
                 </button>
               </div>
@@ -157,22 +193,64 @@ function App() {
           </div>
         </div>
 
-        {/* Terminal Section */}
-        {(logs || isProcessing) && (
-          <div className="terminal-container">
-            <div className="terminal-header">
-              <div className="terminal-dots">
-                <div className="dot red"></div>
-                <div className="dot yellow"></div>
-                <div className="dot green"></div>
+        {/* Output Section */}
+        <div className="grid-layout" style={{ marginTop: '2rem' }}>
+          {/* Terminal Section */}
+          {(logs || isProcessing) && (
+            <div className="terminal-container" style={{ marginTop: 0 }}>
+              <div className="terminal-header">
+                <div className="terminal-dots">
+                  <div className="dot red"></div>
+                  <div className="dot yellow"></div>
+                  <div className="dot green"></div>
+                </div>
+                <div className="terminal-title">server.py</div>
               </div>
-              <div className="terminal-title">server.py</div>
+              <div className="terminal-body" ref={terminalRef}>
+                {logs}
+              </div>
             </div>
-            <div className="terminal-body" ref={terminalRef}>
-              {logs}
+          )}
+
+          {/* G-Code Outline Section */}
+          {(svgContent || gcodeContent || isProcessing) && (
+            <div className="terminal-container" style={{ marginTop: 0, display: 'flex', flexDirection: 'column' }}>
+              <div className="terminal-header">
+                <div className="terminal-dots">
+                  <div className="dot red"></div>
+                  <div className="dot yellow"></div>
+                  <div className="dot green"></div>
+                </div>
+                <div className="terminal-title">G-Code Preview</div>
+              </div>
+              <div className="terminal-body" style={{ flex: 1, padding: 0, overflow: 'hidden', display: 'flex', flexDirection: 'column', backgroundColor: '#0f172a' }}>
+                {isProcessing ? (
+                  <div style={{ flex: 1, color: '#888', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: '10px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <span className="spinner"></span> 
+                      <span>Generating G-Code...</span>
+                    </div>
+                  </div>
+                ) : (
+                  <>
+                    {svgContent && (
+                      <div className="svg-overlay-container" style={{ width: '100%', flex: 1, background: 'transparent' }}>
+                        <div className="svg-animation-wrapper" dangerouslySetInnerHTML={{ __html: svgContent }} />
+                      </div>
+                    )}
+                    {gcodeContent && (
+                      <div style={{ padding: '1rem', borderTop: '1px solid #333', color: '#0f0', fontFamily: 'monospace', fontSize: '0.85rem', whiteSpace: 'pre-wrap', maxHeight: '120px', overflowY: 'auto' }}>
+                        <div style={{ color: '#888', marginBottom: '0.5rem', fontSize: '0.75rem' }}>// First few lines of generated G-Code</div>
+                        {gcodeContent}
+                        {'\n...'}
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

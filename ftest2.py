@@ -299,6 +299,7 @@ def clean_svg_for_pen_plotter(
     stroke_linecap: str = STROKE_LINECAP,
     stroke_linejoin: str = STROKE_LINEJOIN,
 ) -> Path:
+    ET.register_namespace("", "http://www.w3.org/2000/svg")
     tree = ET.parse(input_svg)
     root = tree.getroot()
 
@@ -561,11 +562,22 @@ try:
     from pywinauto import Application
     app = Application(backend="win32").connect(path="LaserGRBL.exe", timeout=15)
     main_window = app.top_window()
-    btn = main_window.child_window(auto_id="BtnRunProgram")
-    btn.wait("visible enabled", timeout=15)
+    
+    # Connect first
+    btn_connect = main_window.child_window(auto_id="BtnConnectDisconnect")
+    btn_connect.wait("visible enabled", timeout=15)
     main_window.set_focus()
     time.sleep(0.5)
-    btn.click_input()
+    btn_connect.click_input()
+    print("Successfully clicked connect in LaserGRBL.")
+    
+    # Wait for connection to establish
+    time.sleep(2.0)
+    
+    # Then play
+    btn_play = main_window.child_window(auto_id="BtnRunProgram")
+    btn_play.wait("visible enabled", timeout=15)
+    btn_play.click_input()
     print("Successfully auto-started the job in LaserGRBL.")
 except Exception as e:
     print(f"Auto-play failed: {e}")
