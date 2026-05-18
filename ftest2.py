@@ -15,12 +15,13 @@ import requests
 from PIL import Image, ImageEnhance, ImageOps
 
 from svgpathtools import Document, Path as SvgPath
+from dotenv import load_dotenv
 
+load_dotenv()
 
 # ----------------- Config -----------------
 PICSART_REMOVE_BG_URL = "https://api.picsart.io/tools/1.0/removebg"
-PICSART_API_KEY = "paat-6ONi0uZDkW0lFjzadx68R9poeh4"  # Put your API key here
-ENV_KEY_NAME = "PICSART_API_KEY"  # Or use an environment variable
+ENV_KEY_NAME = "PICSART_API_KEY"  # Environment variable for the API key
 TIMEOUT_SEC = 120
 
 WHITE_THRESHOLD = 245
@@ -59,15 +60,13 @@ def log(msg: str) -> None:
 
 
 def get_api_key() -> str:
-    if PICSART_API_KEY and not PICSART_API_KEY.startswith("YOUR_"):
-        return PICSART_API_KEY.strip()
     key = os.environ.get(ENV_KEY_NAME, "").strip()
     if not key:
         raise RuntimeError(
             f"Picsart API key not set.\n"
-            f"Please set PICSART_API_KEY at the top of ftest2.py\n"
-            f"or use Windows PowerShell: setx {ENV_KEY_NAME} \"YOUR_KEY_HERE\"\n"
-            f"Then open a NEW terminal and run again."
+            f"Please create a .env file in the root directory and add:\n"
+            f'{ENV_KEY_NAME}="YOUR_KEY_HERE"\n'
+            f"Or set it as an environment variable."
         )
     return key
 

@@ -1,159 +1,166 @@
-# Smart CNC Automated Pen Plotter
-This project presents a fully automated system that converts a user-selected image into CNC-compatible G-code for a pen plotter machine. The system integrates AI background removal, image processing, vector conversion, toolpath generation, and auto-execution into a single workflow.
+<div align="center">
+  <h1> Smart CNC Automated Pen Plotter</h1>
+  <p><strong>A fully automated system converting images to CNC-compatible G-code for pen plotters</strong></p>
+  
+  [![Python](https://img.shields.io/badge/Python-3.x-blue?style=flat&logo=python)](https://www.python.org/)
+  [![React](https://img.shields.io/badge/React-19-61dafb?style=flat&logo=react&logoColor=black)](https://react.dev/)
+  [![Flask](https://img.shields.io/badge/Flask-Backend-green?style=flat&logo=flask)](https://flask.palletsprojects.com/)
+  [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](#license)
+</div>
 
 ---
 
 ## Project Overview
-The goal of this project is to simplify the process of converting images into CNC pen plotter drawings.
 
-Traditional workflows require multiple tools and manual processing steps. This system automates the entire pipeline from image selection to final G-code generation using a modern **React Web Application** and a Python-based backend processing server. It now also features a direct integration with **LaserGRBL** to instantly load and auto-play your plotter!
+The **Smart CNC Automated Pen Plotter** simplifies the complex process of turning digital images into physical CNC pen plotter drawings. 
 
----
+Traditional workflows require piecing together multiple tools (background removers, vectorizers, CAM software). This system automates the entire pipeline—from image selection to optimized G-code generation—using a sleek **React Web Application** and a powerful **Python/Flask backend**. It seamlessly integrates with **LaserGRBL** to instantly load your ready-to-plot files.
 
-## Features 
-- Fully automated image-to-Gcode pipeline
-- Beautiful, high-performance UI using **React** and Glassmorphism styling.
-- Dual drawing modes
-   1. **Outline Mode**: Traces the exact contour edges of the image.
-   2. **Shading / Hatch Mode**: Fills in dark areas with precise hatching.
-- AI background removal via API
-- Automatic raster to vector conversion
-- CNC machine scaling and centering
-- Automatic G-code generation specifically optimized for Servo-based Pen plotters
-- **LaserGRBL Auto-Start**: Automatically launches LaserGRBL, connects, loads the file, and clicks play!
+## Key Features
+
+- **Automated End-to-End Pipeline**: Upload an image and get plotter-ready G-code instantly.
+- **Modern Web Interface**: Beautiful, responsive UI built with React and Glassmorphism design principles.
+- **Dual Drawing Modes**:
+  - ✒️ **Outline Mode**: Traces the exact contour edges using OpenCV adaptive thresholding to capture fine details (eyes, facial features).
+  - 🔲 **Shading / Hatch Mode**: Fills in dark areas with precise diagonal hatching.
+- **AI Background Removal**: Integrates with Picsart API for crisp subject isolation.
+- **Advanced Image Processing**: Utilizes OpenCV and Pillow for sketch effects, contrast enhancement, and raster-to-vector preparation.
+- **Optimized for Pen Plotters**: Generates G-code specifically tuned for servo-based Z-axis control (Pen Up/Down).
+- **LaserGRBL Integration**: Automatically launches LaserGRBL and loads the generated G-code for immediate manual execution.
 
 ---
 
 ## System Workflow
-```text
-User Image + Mode Selection
-        ↓
-AI Background Removal
-        ↓
-White Background Conversion
-        ↓
-Mode Selection
-   /           \
-Outline       Shading
-   \           /
-Raster → Vector (SVG)
-        ↓
-SVG Cleanup
-        ↓
-G-Code Generation
-        ↓
-Auto-Launch LaserGRBL & Auto-Play
-        ↓
-CNC Pen Plot Drawing
+
+```mermaid
+flowchart TD
+    %% Styling Definitions
+    classDef ui fill:#4A90E2,stroke:#fff,stroke-width:2px,color:#fff,rx:8px,ry:8px;
+    classDef backend fill:#50E3C2,stroke:#fff,stroke-width:2px,color:#000,rx:8px,ry:8px;
+    classDef machine fill:#F5A623,stroke:#fff,stroke-width:2px,color:#fff,rx:8px,ry:8px;
+
+    subgraph Frontend [User Interface - Web / Mobile]
+        direction TB
+        A([Upload Image]):::ui --> B{Select Mode}:::ui
+        B -.->|Outline| C([Trigger Generation]):::ui
+        B -.->|Shading| C
+    end
+
+    subgraph Backend [ Processing Pipeline]
+        direction TB
+        C --> D[1. AI Background Removal]:::backend
+        D --> E[2. Image Processing & OpenCV Edge Detection]:::backend
+        E --> F[3. Potrace: Raster to Vector SVG]:::backend
+        F --> G[4. SVG Path Cleanup & Scaling]:::backend
+        G --> H[5. Servo-Optimized G-Code Generation]:::backend
+    end
+
+    subgraph CNC [ Physical Plotting]
+        direction TB
+        H --> I[Auto-Launch LaserGRBL]:::machine
+        I --> J([Manual CNC Plotting]):::machine
+    end
 ```
 
 ---
 
-## Hardware Used
-- CNC Pen Plotter Frame
-- Stepper Motors (X–Y Axis)
-- Servo Motor (Pen Up / Down Control)
-- Arduino Uno
-- CNC Shield
-- Stepper Motor Drivers
-- Power Supply Unit
+## Hardware Requirements
+
+To physically plot the generated G-code, you need:
+- **CNC Pen Plotter Frame** (CoreXY, Cartesian, etc.)
+- **Stepper Motors** (X and Y Axis)
+- **Micro Servo Motor** (Z-Axis / Pen Up & Down Control)
+- **Arduino Uno** with **CNC Shield**
+- **Stepper Motor Drivers** (e.g., A4988 or DRV8825)
+- **Power Supply Unit** (12V)
 
 ---
 
-## Software Stack
-This project uses the following technologies:
+## Tech Stack
 
-- **React & Vite** – Frontend Web UI development
-- **Python & Flask** – Backend server and task processing
-- **Pillow** – Image processing
-- **Requests** – API communication
-- **svgpathtools** – SVG path processing
-- **Potrace** – Raster to vector conversion
-- **pywinauto** – Windows GUI automation for auto-starting the job
-- **LaserGRBL / Universal G-code Sender** – CNC machine control
+- **Frontend (Web)**: React 19, Vite, HTML/CSS
+- **Frontend (Mobile)**: React Native, Expo
+- **Backend API**: Python, Flask, Flask-CORS
+- **Image Processing**: OpenCV (`cv2`), Pillow
+- **Vectorization**: Potrace (bundled), `svgpathtools`
+- **Machine Control**: LaserGRBL (or Universal G-code Sender)
 
 ---
 
-## Project Structure
-```text
-smart-cnc-automated-pen-plotter
-├── frontend/             # React User Interface (Vite)
-├── server.py             # Flask Backend API Server
-├── ftest2.py             # Image processing + G-code generation logic
-├── potrace-1.16.win64/   # Potrace executable for raster-to-vector
-├── README.md             # Project documentation
-└── requirements.txt      # Python dependencies
+## Installation & Setup
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/Junaed93/Smart-CNC.git
+cd Smart-CNC
 ```
 
----
-
-## Installation
-
-### 1. Python Backend Dependencies
-Install the required Python libraries using pip:
-
+### 2. Python Backend Setup
+Install the required Python libraries. It is recommended to use a virtual environment.
 ```bash
 pip install -r requirements.txt
 ```
 
-### 2. React Frontend Dependencies
-Navigate into the frontend folder and install the Node packages:
+### 3. API Key Configuration
+This project uses the Picsart API for background removal. 
+- Create a new file named `.env` in the root directory (or rename `.env.example` to `.env`).
+- Add your API key to the `.env` file like this:
+  ```env
+  PICSART_API_KEY="YOUR_API_KEY_HERE"
+  ```
 
+### 4. React Frontend Setup
+Navigate into the frontend folder and install the Node packages:
 ```bash
 cd frontend
 npm install
 ```
 
----
-
-## Background Removal API
-This project requires an external **background removal API** to remove the background from input images.
-
-The current implementation uses *Picsart Remove Background API*, but other tools or services can also be used.
-
-**Configuration:** The API key should be placed at the top of `ftest2.py` in the `PICSART_API_KEY` variable, or configured as an environment variable before running the project.
+### 5. Mobile App Setup (Optional)
+Navigate into the mobile-app folder and install the Node packages:
+```bash
+cd mobile-app
+npm install
+```
 
 ---
 
-## Vector Conversion Tool
+## Running the Application
 
-This project requires a **raster-to-vector conversion tool** to convert processed images into SVG paths.
+You need to run the backend server and your choice of frontend (Web or Mobile) simultaneously in separate terminal windows.
 
-The current implementation uses **Potrace** (included in the `potrace-1.16.win64` folder). The script automatically routes the processed PNG image through Potrace to generate SVG vector paths that can be processed for G-code generation.
-
----
-
-## Running the Project
-Since this is a web application, you need to run the backend and frontend simultaneously in two separate terminal windows.
-
-### 1. Start the Backend Server
-In the main project directory, start the Flask server:
+### Start the Backend Server
 ```bash
 python server.py
 ```
 *(Runs on `http://localhost:5000`)*
 
-### 2. Start the Frontend UI
-Open a new terminal, navigate to the frontend folder, and start the React dev server:
+### Start the Web Frontend UI
+Open a new terminal:
 ```bash
 cd frontend
 npm run dev
 ```
 *(Runs on `http://localhost:5173`)*
 
-### Steps to Plot
-1. Open the provided `localhost` link in your web browser.
-2. Drag and drop (or browse and select) an image file.
-3. Choose your preferred processing mode (Outline or Shading).
-4. Click **Generate & Auto-Play**.
-
-The system will automatically process the image, generate CNC G-code, launch LaserGRBL, load the file, and automatically hit play! You can monitor the Python logs directly within the UI terminal window.
+### Start the Mobile App
+Open a new terminal:
+```bash
+cd mobile-app
+npm start
+```
+*(Scan the QR code with Expo Go on your mobile device)*
 
 ---
 
-## CNC Machine Control
-The generated G-code is executed using a **GRBL-based CNC control system**.
+## How to Use
 
-The machine receives **G-code commands** from a G-code sender such as **LaserGRBL** or **Universal G-code Sender**. The firmware used for machine control is **GRBL**, configured to handle servo motors (using M3/M5 spindle commands) for pen up/down movements.
+1. Open your preferred frontend (Web or Mobile).
+2. **Drag and drop** or browse to select an image file.
+3. Select your preferred drawing mode: **Outline** or **Shading**.
+4. Click **Generate**.
+5. Watch the live Python logs in the UI terminal window.
+6. Once processing is complete, **LaserGRBL will launch automatically** with your G-code pre-loaded.
+7. Connect your CNC machine in LaserGRBL and manually hit **Play** to start drawing!
 
 ---
