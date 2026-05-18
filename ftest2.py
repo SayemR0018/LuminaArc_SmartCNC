@@ -136,14 +136,27 @@ def make_line_ready_bw(
     threshold: int = LINE_THRESHOLD,
     invert: bool = LINE_INVERT,
 ) -> Path:
-    im = Image.open(input_image).convert("RGB")
-    im = ImageOps.grayscale(im)
-    im = ImageOps.autocontrast(im, cutoff=1)
-    im = ImageEnhance.Contrast(im).enhance(contrast)
-    im = im.point(lambda p: 255 if p > threshold else 0, mode="L")
+    import cv2
+    
+    img = cv2.imread(str(input_image))
+    if img is None:
+        raise RuntimeError(f"Could not load image {input_image}")
+        
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+    # Apply a sketch effect to enhance edges (eyes, mouth, etc.)
+    blur = cv2.GaussianBlur(gray, (21, 21), 0)
+    sketch = cv2.divide(gray, blur, scale=256)
+    
+    # Use adaptive threshold to get crisp outlines
+    thresh = cv2.adaptiveThreshold(
+        sketch, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
+    )
+    
     if invert:
-        im = ImageOps.invert(im)
-    im.save(output_path, format="PNG")
+        thresh = cv2.bitwise_not(thresh)
+        
+    cv2.imwrite(str(output_path), thresh)
     return output_path
 
 
@@ -615,11 +628,17 @@ def process_one(input_path: Path, mode: int) -> dict:
             result["success"] = True
             return result
 
-        log(f"[1/6] RemoveBG: {input_path.name}")
-        picsart_remove_bg(input_path, cutout_path)
+        if not cutout_path.exists():
+            log(f"[1/6] RemoveBG: {input_path.name}")
+            picsart_remove_bg(input_path, cutout_path)
+        else:
+            log(f"[1/6] RemoveBG skipped (already exists): {cutout_path.name}")
 
-        log("[2/6] White background")
-        make_white_background(cutout_path, white_path)
+        if not white_path.exists():
+            log("[2/6] White background")
+            make_white_background(cutout_path, white_path)
+        else:
+            log("[2/6] White background skipped (already exists)")
 
         if mode == 1:
             log("[3/6] Mode-1 outline")
