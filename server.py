@@ -17,6 +17,12 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 def serve_uploads(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
 
+ALLOWED_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.gif', '.bmp', '.webp', '.svg', '.svgz'}
+
+def allowed_file(filename: str) -> bool:
+    ext = os.path.splitext(filename)[1].lower()
+    return ext in ALLOWED_EXTENSIONS
+
 @app.route('/api/process', methods=['POST'])
 def process_image():
     if 'file' not in request.files:
@@ -25,6 +31,9 @@ def process_image():
     file = request.files['file']
     if file.filename == '':
         return jsonify({"success": False, "error": "No selected file"}), 400
+    
+    if not allowed_file(file.filename):
+        return jsonify({"success": False, "error": "Unsupported file type. Supported: PNG, JPG, BMP, WEBP, SVG"}), 400
     
     mode = request.form.get('mode', '1')
     try:
@@ -53,8 +62,8 @@ def process_image():
                     "success": True, 
                     "logs": logs,
                     "message": "Processing complete! LaserGRBL should be launching.",
-                    "svg_url": f"http://localhost:5000/uploads/{svg_filename}",
-                    "gcode_url": f"http://localhost:5000/uploads/{gcode_filename}"
+                    "svg_url": f"http://localhost:5001/uploads/{svg_filename}",
+                    "gcode_url": f"http://localhost:5001/uploads/{gcode_filename}"
                 })
             else:
                 return jsonify({
@@ -72,4 +81,4 @@ def process_image():
             }), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)

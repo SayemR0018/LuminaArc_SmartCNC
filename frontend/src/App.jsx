@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react';
 import './index.css';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL ?? 'http://localhost:5001';
+
 function App() {
   const [file, setFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -9,24 +11,68 @@ function App() {
   const [logs, setLogs] = useState('');
   const [svgContent, setSvgContent] = useState(null);
   const [gcodeContent, setGcodeContent] = useState(null);
+  const [ratioError, setRatioError] = useState('');
   const fileInputRef = useRef(null);
   const terminalRef = useRef(null);
 
-  const handleFileChange = (e) => {
+  const isSvg = (f) => f && (f.name.endsWith('.svg') || f.name.endsWith('.svgz'));
+  const isRaster = (f) => f && f.type && f.type.startsWith('image/') && !f.name.endsWith('.svg') && !f.name.endsWith('.svgz');
+
+  const checkSquareRatio = (file) => {
+    return new Promise((resolve) => {
+      if (!file || isSvg(file)) {
+        setRatioError('');
+        resolve(true);
+        return;
+      }
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        const w = img.naturalWidth;
+        const h = img.naturalHeight;
+        const ratio = w / h;
+        if (Math.abs(ratio - 1.0) > 0.05) {
+          setRatioError(`Laser mode requires a square image (1:1 ratio). Got ${w}×${h}.`);
+          resolve(false);
+        } else {
+          setRatioError('');
+          resolve(true);
+        }
+        URL.revokeObjectURL(url);
+      };
+      img.onerror = () => resolve(true);
+      img.src = url;
+    });
+  };
+
+  const handleFileChange = async (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile) {
+      if (mode === 3 && isRaster(selectedFile)) {
+        const ok = await checkSquareRatio(selectedFile);
+        if (!ok) {
+          e.target.value = '';
+          return;
+        }
+      }
       setFile(selectedFile);
       setPreviewUrl(URL.createObjectURL(selectedFile));
-      setLogs(''); // Clear logs on new file
+      setLogs('');
       setSvgContent(null);
       setGcodeContent(null);
     }
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = async (e) => {
     e.preventDefault();
     const droppedFile = e.dataTransfer.files[0];
-    if (droppedFile && droppedFile.type.startsWith('image/')) {
+    if (!droppedFile) return;
+    const isImage = droppedFile.type.startsWith('image/') || droppedFile.name.endsWith('.svg') || droppedFile.name.endsWith('.svgz');
+    if (isImage) {
+      if (mode === 3 && isRaster(droppedFile)) {
+        const ok = await checkSquareRatio(droppedFile);
+        if (!ok) return;
+      }
       setFile(droppedFile);
       setPreviewUrl(URL.createObjectURL(droppedFile));
       setLogs('');
@@ -56,7 +102,7 @@ function App() {
     try {
       setLogs(prev => prev + `Uploading ${file.name}...\n`);
       
-      const response = await fetch('http://localhost:5000/api/process', {
+      const response = await fetch(`${API_BASE_URL}/api/process`, {
         method: 'POST',
         body: formData,
       });
@@ -129,7 +175,7 @@ function App() {
               type="file" 
               ref={fileInputRef} 
               onChange={handleFileChange} 
-              accept="image/*" 
+              accept={mode === 3 ? "image/*,.svg,.svgz" : "image/*"} 
               style={{ display: 'none' }} 
             />
             
@@ -162,7 +208,7 @@ function App() {
               <div className="mode-selector">
                 <div 
                   className={`mode-card ${mode === 1 ? 'active' : ''}`}
-                  onClick={() => setMode(1)}
+                  onClick={() => { setMode(1); setRatioError(''); }}
                 >
                   <div className="mode-icon">〰️</div>
                   <div className="mode-title">Outline</div>
@@ -170,13 +216,29 @@ function App() {
                 </div>
                 <div 
                   className={`mode-card ${mode === 2 ? 'active' : ''}`}
-                  onClick={() => setMode(2)}
+                  onClick={() => { setMode(2); setRatioError(''); }}
                 >
                   <div className="mode-icon">▒</div>
                   <div className="mode-title">Shading</div>
                   <div className="mode-desc">Fills dark areas</div>
                 </div>
+                <div 
+                  className={`mode-card ${mode === 3 ? 'active' : ''}`}
+                  onClick={() => { setMode(3); setRatioError(''); }}
+                >
+                  <div className="mode-icon">🔥</div>
+                  <div className="mode-title">Laser</div>
+                  <div className="mode-desc">Vector-only laser gcode</div>
+                </div>
               </div>
+              {mode === 3 && (
+                <div className="mode-note">
+                  Laser mode requires an SVG file or a square image (1:1 ratio). It generates laser-safe vector gcode with laser on/off commands.
+                </div>
+              )}
+              {ratioError && (
+                <div className="error-note">{ratioError}</div>
+              )}
             </div>
 
             <button 
@@ -187,7 +249,7 @@ function App() {
               {isProcessing ? (
                 <><span className="spinner"></span> Processing...</>
               ) : (
-                'Generate & Auto-Play ▶'
+                mode === 3 ? 'Generate Laser G-Code ▶' : 'Generate & Auto-Play ▶'
               )}
             </button>
           </div>
