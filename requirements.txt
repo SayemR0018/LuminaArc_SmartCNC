@@ -6,3 +6,4 @@ opencv-python
 flask
 flask-cors
 python-dotenv
+pyserial
