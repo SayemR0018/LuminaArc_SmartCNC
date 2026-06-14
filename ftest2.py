@@ -38,7 +38,7 @@ STROKE_LINEJOIN = "round"
 
 POTRACE_EXE = str(Path(__file__).parent / "potrace-1.16.win64" / "potrace.exe")
 
-POTRACE_TURDSIZE = "10"
+POTRACE_TURDSIZE = "100"  # Increased from 10 to 100 to remove small noise specks/blemishes
 POTRACE_ALPHAMAX = "1"
 POTRACE_OPTTOL = "0.2"
 
@@ -152,18 +152,16 @@ def make_line_ready_bw(
     
     # Remove CLAHE to prevent enhancing shadows and solid color noise (like the shirt)
     
-    # Median blur to remove fine textures and salt & pepper noise
-    gray = cv2.medianBlur(gray, 5)
+    # Median blur is incredibly effective at removing fine textures (like shirt fabric and skin pores)
+    # while preserving strong structural edges (eyes, nose, mouth shape).
+    gray = cv2.medianBlur(gray, 7)
     
-    # Apply a very strong bilateral filter multiple times to "cartoonify" the image.
-    # This aggressively flattens low-contrast gradients (like the broad shadows and folds on the shirt)
-    # into solid blocks of color, but strictly preserves distinct boundaries (like lips, eyes, jawline).
-    for _ in range(3):
-        gray = cv2.bilateralFilter(gray, d=9, sigmaColor=120, sigmaSpace=120)
+    # Use a bilateral filter that smooths any remaining faint shadows
+    blurred = cv2.bilateralFilter(gray, d=7, sigmaColor=50, sigmaSpace=50)
     
-    # Because the shirt folds are now completely flattened, we can use very sensitive Canny thresholds
-    # to trace the facial features (which survived the filtering) without picking up the shirt!
-    edges = cv2.Canny(gray, 15, 40, L2gradient=True)
+    # With the fabric texture destroyed by medianBlur, we can safely use very low Canny thresholds
+    # to catch the soft edges of the lower lips and nose without bringing back the shirt noise!
+    edges = cv2.Canny(blurred, 15, 45, L2gradient=True)
     
     # Dilate edges slightly to make them contiguous and suitable for plotting/tracing
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
@@ -448,10 +446,32 @@ def bbox_of_paths(paths: List[SvgPath]) -> Tuple[float, float, float, float]:
     return minx, miny, maxx, maxy
 
 
-def fit_to_machine(paths: List[SvgPath]) -> Tuple[float, float, float]:
+def fit_to_machine(paths: List[SvgPath], svg_file: Optional[Path] = None) -> Tuple[float, float, float]:
     minx, miny, maxx, maxy = bbox_of_paths(paths)
     w = maxx - minx
     h = maxy - miny
+    
+    if svg_file:
+        try:
+            tree = ET.parse(svg_file)
+            root = tree.getroot()
+            if 'viewBox' in root.attrib:
+                vb = root.attrib['viewBox'].split()
+                if len(vb) == 4:
+                    minx, miny = float(vb[0]), float(vb[1])
+                    w, h = float(vb[2]), float(vb[3])
+            else:
+                width = root.attrib.get('width', '')
+                height = root.attrib.get('height', '')
+                if width and height:
+                    import re
+                    w = float(re.sub(r'[^\d.]', '', width))
+                    h = float(re.sub(r'[^\d.]', '', height))
+                    minx = 0
+                    miny = 0
+        except Exception:
+            pass
+
     if w <= 0 or h <= 0:
         raise RuntimeError("SVG has invalid size (bbox zero).")
 
@@ -509,8 +529,8 @@ def sample_path(p: SvgPath, scale: float, dx: float, dy: float) -> List[Tuple[fl
     return out
 
 
-def build_gcode(paths: List[SvgPath]) -> str:
-    scale, dx, dy = fit_to_machine(paths)
+def build_gcode(paths: List[SvgPath], svg_file: Optional[Path] = None) -> str:
+    scale, dx, dy = fit_to_machine(paths, svg_file)
 
     lines: List[str] = []
     lines.append("G90")
@@ -564,8 +584,8 @@ def build_gcode(paths: List[SvgPath]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def build_laser_gcode(paths: List[SvgPath]) -> str:
-    scale, dx, dy = fit_to_machine(paths)
+def build_laser_gcode(paths: List[SvgPath], svg_file: Optional[Path] = None) -> str:
+    scale, dx, dy = fit_to_machine(paths, svg_file)
 
     lines: List[str] = []
     lines.append("G90")
@@ -670,7 +690,7 @@ def process_one(input_path: Path, mode: int) -> dict:
 
             log("[2/3] SVG -> Laser G-code")
             paths = get_paths(clean_svg_path)
-            gcode = build_laser_gcode(paths)
+            gcode = build_laser_gcode(paths, clean_svg_path)
             gcode_path.write_text(gcode, encoding="utf-8")
             result["gcode"] = str(gcode_path)
 
@@ -720,7 +740,7 @@ def process_one(input_path: Path, mode: int) -> dict:
 
             log("[4/4] SVG -> Laser G-code")
             paths = get_paths(clean_svg_path)
-            gcode = build_laser_gcode(paths)
+            gcode = build_laser_gcode(paths, clean_svg_path)
             gcode_path.write_text(gcode, encoding="utf-8")
             result["gcode"] = str(gcode_path)
 
@@ -781,7 +801,7 @@ def process_one(input_path: Path, mode: int) -> dict:
 
         log("[6/6] SVG -> G-code")
         paths = get_paths(clean_svg_path)
-        gcode = build_gcode(paths)
+        gcode = build_gcode(paths, clean_svg_path)
         gcode_path.write_text(gcode, encoding="utf-8")
         result["gcode"] = str(gcode_path)
 
