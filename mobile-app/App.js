@@ -42,41 +42,23 @@ export default function App() {
 
   const checkSquareRatio = (file) => {
     return new Promise((resolve) => {
-      if (!file || isSvg(file)) {
-        setRatioError('');
-        resolve(true);
-        return;
-      }
-      const { width, height } = file;
-      if (width && height) {
-        const ratio = width / height;
-        if (Math.abs(ratio - 1.0) > 0.05) {
-          setRatioError(`Laser mode requires a square image (1:1 ratio). Got ${width}×${height}.`);
-          resolve(false);
-        } else {
-          setRatioError('');
-          resolve(true);
-        }
-      } else {
-        setRatioError('');
-        resolve(true);
-      }
+      // Backend now automatically pads to 1:1, so we just clear any old errors.
+      setRatioError('');
+      resolve(true);
     });
   };
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: false,
+      allowsEditing: mode === 3,
+      aspect: mode === 3 ? [1, 1] : undefined,
       quality: 1,
     });
 
     if (!result.canceled && result.assets && result.assets.length > 0) {
       const picked = result.assets[0];
-      if (mode === 3 && isRaster(picked)) {
-        const ok = await checkSquareRatio(picked);
-        if (!ok) return;
-      }
+      setRatioError('');
       setFile(picked);
       setLogs('');
       setSvgContent(null);
@@ -289,7 +271,7 @@ export default function App() {
             {mode === 3 && (
               <View style={styles.modeNote}>
                 <Text style={styles.modeNoteText}>
-                  Laser mode requires an SVG file or a square image (1:1 ratio).
+                  Laser mode uses a 1:1 square ratio. Images will be auto-cropped or padded.
                 </Text>
               </View>
             )}

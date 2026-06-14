@@ -36,6 +36,13 @@ STROKE_WIDTH_PX = "1.2"
 STROKE_LINECAP = "round"
 STROKE_LINEJOIN = "round"
 
+POTRACE_EXE = str(Path(__file__).parent / "potrace-1.16.win64" / "potrace.exe")
+
+POTRACE_TURDSIZE = "10"
+POTRACE_ALPHAMAX = "1"
+POTRACE_OPTTOL = "0.2"
+
+
 # Hatching shading settings (balanced for 0.5mm pen)
 HATCH_LINE_STEP_PX = 7
 HATCH_THICKNESS_PX = 2
@@ -143,14 +150,27 @@ def make_line_ready_bw(
         
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     
-    # Apply a sketch effect to enhance edges (eyes, mouth, etc.)
-    blur = cv2.GaussianBlur(gray, (21, 21), 0)
-    sketch = cv2.divide(gray, blur, scale=256)
+    # Remove CLAHE to prevent enhancing shadows and solid color noise (like the shirt)
     
-    # Use adaptive threshold to get crisp outlines
-    thresh = cv2.adaptiveThreshold(
-        sketch, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2
-    )
+    # Median blur to remove fine textures and salt & pepper noise
+    gray = cv2.medianBlur(gray, 5)
+    
+    # Apply a very strong bilateral filter multiple times to "cartoonify" the image.
+    # This aggressively flattens low-contrast gradients (like the broad shadows and folds on the shirt)
+    # into solid blocks of color, but strictly preserves distinct boundaries (like lips, eyes, jawline).
+    for _ in range(3):
+        gray = cv2.bilateralFilter(gray, d=9, sigmaColor=120, sigmaSpace=120)
+    
+    # Because the shirt folds are now completely flattened, we can use very sensitive Canny thresholds
+    # to trace the facial features (which survived the filtering) without picking up the shirt!
+    edges = cv2.Canny(gray, 15, 40, L2gradient=True)
+    
+    # Dilate edges slightly to make them contiguous and suitable for plotting/tracing
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2, 2))
+    edges = cv2.dilate(edges, kernel, iterations=1)
+    
+    # Invert to get black lines on white background (needed for potrace)
+    thresh = cv2.bitwise_not(edges)
     
     if invert:
         thresh = cv2.bitwise_not(thresh)
@@ -220,6 +240,41 @@ def calculate_white_ratio(image_path: Path, threshold: int = WHITE_THRESHOLD) ->
         return 0.0
     white_count = sum(hist[threshold:256])
     return white_count / total
+
+def ensure_potrace_available(potrace_exe: str = POTRACE_EXE) -> None:
+    p = Path(potrace_exe)
+    if not p.exists():
+        raise RuntimeError(
+            "Potrace not found.\n"
+            "Set POTRACE_EXE to your potrace.exe full path.\n"
+            f"Current: {potrace_exe}"
+        )
+    subprocess.run([potrace_exe, "-v"], check=True, capture_output=True, text=True)
+
+
+def png_to_bmp_for_potrace(input_png: Path, output_bmp: Path) -> Path:
+    im = Image.open(input_png).convert("L")
+    im = im.point(lambda p: 255 if p > 127 else 0, mode="L")
+    im = im.convert("1")
+    im.save(output_bmp, format="BMP")
+    return output_bmp
+
+
+def potrace_trace_to_svg(input_bmp: Path, output_svg: Path) -> Path:
+    cmd = [
+        POTRACE_EXE,
+        input_bmp.as_posix(),
+        "-s",
+        "-o", output_svg.as_posix(),
+        "--turdsize", POTRACE_TURDSIZE,
+        "--alphamax", POTRACE_ALPHAMAX,
+        "--opttolerance", POTRACE_OPTTOL,
+    ]
+    subprocess.run(cmd, check=True, capture_output=True, text=True)
+
+    if not output_svg.exists() or output_svg.stat().st_size == 0:
+        raise RuntimeError("Potrace said OK but SVG not created / empty.")
+    return output_svg
 
 
 def _cleanup_trace_files(base: Path) -> None:
@@ -324,43 +379,10 @@ def clean_svg_for_pen_plotter(
 
 
 def trace_png_to_svg_auto(line_png: Path, svg_path: Path, base: Path) -> None:
-    import cv2
-
-    img = cv2.imread(str(line_png), cv2.IMREAD_GRAYSCALE)
-    if img is None:
-        raise RuntimeError(f"Could not load image for tracing: {line_png}")
-
-    _, binary = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY_INV)
-    contours, _ = cv2.findContours(binary, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-
-    min_area = 3
-    contours = [c for c in contours if cv2.contourArea(c) >= min_area]
-
-    if not contours:
-        raise RuntimeError("No contours found in image (image may be blank).")
-
-    h, w = img.shape
-    lines = [
-        '<?xml version="1.0" encoding="UTF-8"?>',
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" viewBox="0 0 {w} {h}">',
-    ]
-
-    for contour in contours:
-        pts = contour.reshape(-1, 2).astype(float)
-        if len(pts) < 2:
-            continue
-
-        d = f"M {pts[0][0]:.1f},{pts[0][1]:.1f}"
-        for p in pts[1:]:
-            d += f" L {p[0]:.1f},{p[1]:.1f}"
-        d += " Z"
-        lines.append(f'  <path d="{d}"/>')
-
-    lines.append('</svg>')
-    svg_path.write_text("\n".join(lines), encoding="utf-8")
-
-    if not svg_has_paths(svg_path):
-        raise RuntimeError("No vector paths in traced SVG.")
+    ensure_potrace_available()
+    bmp_path = line_png.with_suffix(".bmp")
+    png_to_bmp_for_potrace(line_png, bmp_path)
+    potrace_trace_to_svg(bmp_path, svg_path)
 
 
 # ======================================================================
@@ -680,11 +702,14 @@ def process_one(input_path: Path, mode: int) -> dict:
             if h > 0:
                 ratio = w / h
                 if abs(ratio - 1.0) > 0.05:
-                    raise RuntimeError(
-                        f"Laser mode requires a square image (1:1 ratio). "
-                        f"Got {w}x{h} (ratio {ratio:.2f})."
-                    )
-            log("[1/4] 1:1 ratio OK, extracting outline")
+                    size = max(w, h)
+                    im = im.convert("RGB")
+                    new_im = Image.new("RGB", (size, size), (255, 255, 255))
+                    new_im.paste(im, ((size - w) // 2, (size - h) // 2))
+                    new_im.save(input_path)
+                    log(f"[1/4] Image auto-padded to 1:1 ratio ({size}x{size})")
+                else:
+                    log("[1/4] 1:1 ratio OK, extracting outline")
             make_line_ready_bw(input_path, line_path)
 
             log("[2/4] Potrace -> SVG")
