@@ -1,5 +1,5 @@
 <div align="center">
-  <h1> Smart CNC Automated Pen Plotter</h1>
+  <h1> LuminaArc-Smart_CNC</h1>
   <p><strong>A fully automated system converting images to CNC-compatible G-code for pen plotters</strong></p>
   
   [![Python](https://img.shields.io/badge/Python-3.x-blue?style=flat&logo=python)](https://www.python.org/)
@@ -12,7 +12,7 @@
 
 ## Project Overview
 
-The **Smart CNC Automated Pen Plotter** simplifies the complex process of turning digital images into physical CNC pen plotter drawings. 
+The **LuminaArc-Smart_CNC** simplifies the complex process of turning digital images into physical CNC pen plotter drawings. 
 
 Traditional workflows require piecing together multiple tools (background removers, vectorizers, CAM software). This system automates the entire pipeline—from image selection to optimized G-code generation—using a sleek **React Web Application** and a powerful **Python/Flask backend**. It seamlessly integrates with **LaserGRBL** to instantly load your ready-to-plot files.
 
@@ -164,3 +164,8 @@ npm start
 7. Connect your CNC machine in LaserGRBL and manually hit **Play** to start drawing!
 
 ---
+
+## Contributors
+
+- **Software Md Junaed khandakar(https://github.com/Junaed93) Me-Ofc**: Contributed in image processing app and web version development.
+- **Honorable Mention - Md Redwan Hossain(https://github.com/redwan212)**: Created the initial project and the software that I used here and made this fully working.
