@@ -168,4 +168,4 @@ npm start
 ## Contributors
 
 - **Software Md Junaed khandakar(https://github.com/Junaed93) Me-Ofc**: Contributed in image processing app and web version development.
-- **Honorable Mention - Md Redwan Hossain(https://github.com/redwan212)**: Created the initial project and the software that I used here and made this fully working.
+- **Honorable Mention - Md Redwan Hossain(https://github.com/redwan212)**: Created the initial project and the software that I used and modified it for my needs.
